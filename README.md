@@ -133,13 +133,12 @@ Google. Music data, artwork, and audio belong to their respective owners.
    probabilistic and can hallucinate albums or reasons, so every suggestion must
    be verified, and it depends on an external API's limits and availability.
 5. **Describe the hardest bug you hit and how you fixed it.**
-   The hardest bug was on the deployed site: Recommendations returned a 500
-   error even though it worked locally. The Vercel environment variable held the
-   API key three times on separate lines, so the Gemini request failed with an
-   invalid header value. I fixed it by extracting only the first non-empty line
-   in the serverless function and by replacing the Vercel value with a single
-   line. I also added a browser-like `User-Agent` to the Deezer function because
-   Deezer rejected the default serverless request.
+   The hardest bug was Recommendations returning a 500 error on the live site
+   while it worked locally. The Vercel variable was saved as `GEMIN_API_KEY`,
+   with one `I` missing, so `process.env.GEMINI_API_KEY` was always empty even
+   though I was sure the key was set. Renaming the variable and redeploying fixed
+   it. Along the way I also had to send a browser-like `User-Agent` from the
+   Deezer function, because Deezer blocked the default serverless request.
 
 ## Submission checklist
 
