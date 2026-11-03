@@ -2,8 +2,10 @@ export default async function handler(req, res) {
   if (req.method !== "POST")
     return res.status(405).json({ error: "Use POST." });
 
-  // Trim whitespace/newlines that can sneak in when pasting into a host's UI.
-  const key = process.env.GEMINI_API_KEY?.trim();
+  // Trim whitespace/quotes that can sneak in when pasting into a host's UI.
+  const key = (process.env.GEMINI_API_KEY ?? "")
+    .trim()
+    .replace(/^["']|["']$/g, "");
   if (!key) {
     return res.status(500).json({
       error: "GEMINI_API_KEY is missing. Check .env.local and restart.",
@@ -70,9 +72,19 @@ export default async function handler(req, res) {
     }
 
     const data = await r.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text ?? "{}";
-    const parsed = JSON.parse(text);
-    return res.status(200).json({ albums: parsed.albums ?? [] });
+    const raw = (data.candidates?.[0]?.content?.parts ?? [])
+      .map((part) => part.text ?? "")
+      .join("");
+    // Be forgiving if the model wraps its JSON in a markdown code fence.
+    const text = raw
+      .trim()
+      .replace(/^```(?:json)?\s*/i, "")
+      .replace(/\s*```$/, "")
+      .trim();
+    const parsed = JSON.parse(text || "{}");
+    return res.status(200).json({
+      albums: Array.isArray(parsed.albums) ? parsed.albums : [],
+    });
   } catch (err) {
     console.error("Function error:", err);
     return res.status(500).json({
