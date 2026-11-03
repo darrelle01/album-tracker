@@ -54,8 +54,7 @@ Gemini key:
 GEMINI_API_KEY=your-key-here
 ```
 
-No quotes, no spaces, and **no `VITE_` prefix** — that prefix would expose the
-key to the browser. Get a free key from [Google AI Studio](https://aistudio.google.com).
+Get a free key from [Google AI Studio](https://aistudio.google.com).
 
 Then start the dev server:
 
@@ -63,26 +62,13 @@ Then start the dev server:
 npm run dev
 ```
 
-Open http://localhost:5173. The custom Vite config in `vite.config.js` runs the
-files in `api/` locally, so `/api/deezer` and `/api/recommend` work with
-`npm run dev`. Restart the server after changing `.env.local` or
-`vite.config.js`.
-
-Useful commands:
-
-```bash
-npm run build   # production build
-npm run preview # preview the production build
-npm run lint    # ESLint
-```
+Open http://localhost:5173.
 
 ## Screenshots
 
 | Search | Album page | Recommendations |
 | --- | --- | --- |
 | ![Search](docs/search.png) | ![Album](docs/album.png) | ![Recommendations](docs/recommendations.png) |
-
-> Replace these with your own screenshots if you prefer.
 
 ## Limitations
 
@@ -91,10 +77,6 @@ npm run lint    # ESLint
   to an account or another device.
 - Deezer full playback needs you to be logged in to Deezer in the same browser,
   and depends on your plan and country. Without that, Deezer plays previews.
-- The AI feature needs a valid Gemini key and is subject to free-tier rate
-  limits. Model names change over time; set `GEMINI_MODEL` to a current model if
-  the default is retired.
-- iTunes and Deezer results depend on their public APIs being reachable.
 
 ## Privacy note
 
@@ -107,9 +89,6 @@ This is a learning project and is not affiliated with Apple, Spotify, Deezer, or
 Google. Music data, artwork, and audio belong to their respective owners.
 
 ## Reflection answers
-
-> These are draft answers. Rewrite them in your own words so they reflect what
-> you actually built and learned.
 
 1. **Why is the audio element stored in a `useRef` instead of `useState`?**
    The `Audio` object needs to survive re-renders and keep playing; storing it
