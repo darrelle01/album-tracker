@@ -1,43 +1,43 @@
 # Album Tracker
 
-Album Tracker is a React app for finding music albums, previewing their tracks,
-and keeping a personal listening log. Search the iTunes catalogue, open an album
-to see its cover, year, genre and track list, play 30-second previews in a mini
-player that keeps going while you browse, then save albums to your collection
-with a listening status, a 1–5 star rating, and notes. Popular albums can also
-be played in full through Deezer's embedded player, and an LLM-powered
-recommendations page suggests new albums based on the albums and ratings already
-in your collection.
+I made this for the React lab: an app where you search for albums, listen to
+previews, and keep track of what you want to hear and what you thought of it.
+Searching uses the iTunes API, and clicking a result opens the album with its
+cover, year, genre and track list. You can play the 30 second clips in a small
+player that stays at the bottom while you look around. Saved albums go into My
+collection with a status, a star rating and some notes, and they survive a
+refresh. For popular albums the Deezer lookup usually finds a match, and then you
+get a full album player instead of the previews. The Recommendations tab sends
+the albums you saved and your ratings to Gemini, and it shows six albums that are
+not in your collection yet.
 
-![Search results screenshot](docs/search.png)
+![Search results](docs/search.png)
 
 **Live site:** https://album-tracker-six.vercel.app
-**GitHub repository:** https://github.com/darrelle01/album-tracker
+**GitHub:** https://github.com/darrelle01/album-tracker
 
 ## Features
 
-- **Discover** — search the iTunes Search API (no key required) and browse up to
-  24 album cards per search.
-- **Album page** — large cover, artist, year, genre, track count, track list with
-  durations, and links to Spotify, YouTube, and Apple Music.
-- **30-second previews** — play, pause, skip, and seek with a fixed mini player
-  that survives page changes.
-- **My collection** — save albums with a status (*Want to listen*, *Listening*,
-  *Listened*), a star rating, and free-text notes. Filter by status, search by
-  title or artist, and sort by title, artist, or rating.
-- **Persistence** — the collection is stored in `localStorage`, so it survives a
-  refresh.
-- **Full albums on Deezer** — a serverless function searches Deezer; when there
-  is a confident match, the app offers Deezer's embedded player instead of the
-  preview list.
-- **AI recommendations** — a serverless function sends a taste profile (titles,
-  artists, ratings, statuses) to Google Gemini, then each suggestion is verified
-  against the iTunes API so invented albums are dropped.
+- Search the iTunes catalogue and get up to 24 album cards per search. No key is
+  needed for this one.
+- Album page with the big cover, artist, year, genre, track count and the track
+  list, plus links to Spotify, YouTube and Apple Music.
+- 30 second previews with play, pause, next, previous and a seek bar. The player
+  keeps playing when you go back to search or open your collection.
+- My collection: save an album as want to listen, listening or listened, give it
+  1 to 5 stars and write notes. You can filter by status, search by title or
+  artist, and sort by title, artist or rating.
+- The collection is stored in `localStorage`, so it is still there after a
+  refresh or a restart.
+- Deezer lookup through a serverless function. If it finds a confident match you
+  get the embedded Deezer player, otherwise the preview list stays.
+- Recommendations through a serverless function that asks Gemini for ideas based
+  on your ratings. Each idea is then searched on iTunes, so albums that do not
+  really exist get dropped.
 
 ## Tech stack
 
-React, Vite, Context API, iTunes Search API, Deezer API, Google Gemini API, and
-Vercel serverless functions.
+React, Vite, Context API, iTunes Search API, Deezer, Gemini, Vercel.
 
 ## Run it locally
 
@@ -47,22 +47,19 @@ cd album-tracker
 npm install
 ```
 
-Create `.env.local` in the project root (next to `package.json`) and add your
-Gemini key:
+Make a `.env.local` file in the project root, next to `package.json`, and put
+your Gemini key in it:
 
 ```dotenv
 GEMINI_API_KEY=your-key-here
 ```
 
-Get a free key from [Google AI Studio](https://aistudio.google.com).
-
-Then start the dev server:
+You can create a free key at [Google AI Studio](https://aistudio.google.com).
+Then run the dev server and open http://localhost:5173:
 
 ```bash
 npm run dev
 ```
-
-Open http://localhost:5173.
 
 ## Screenshots
 
@@ -72,62 +69,66 @@ Open http://localhost:5173.
 
 ## Limitations
 
-- Previews are 30 seconds because that is all the iTunes API provides.
-- The collection lives only in this browser's `localStorage`; it is not synced
-  to an account or another device.
-- Deezer full playback needs you to be logged in to Deezer in the same browser,
-  and depends on your plan and country. Without that, Deezer plays previews.
+- Previews are 30 seconds because that is all the iTunes API gives you.
+- The collection is only saved in this browser's `localStorage`, so it does not
+  move to another device or another browser.
+- Deezer full playback only works if you are logged in to Deezer in the same
+  browser. Otherwise it plays previews.
 
 ## Privacy note
 
-When you request recommendations, the app sends the **titles, artists, ratings,
-and statuses** of up to 40 saved albums to Google's Gemini API. Your notes are
-**not** sent. The API key stays on the server in a Vercel environment variable
-and is never included in the React bundle.
+When you ask for recommendations, the app sends the titles, artists, ratings and
+statuses of up to 40 saved albums to Google's Gemini API. Your notes are not
+sent. The key is kept in a Vercel environment variable and is read by the
+serverless function, so it never ends up in the React code.
 
-This is a learning project and is not affiliated with Apple, Spotify, Deezer, or
-Google. Music data, artwork, and audio belong to their respective owners.
+This is a class project. It is not affiliated with Apple, Spotify, Deezer or
+Google, and the music, artwork and audio belong to their owners.
 
 ## Reflection answers
 
 1. **Why is the audio element stored in a `useRef` instead of `useState`?**
-   The `Audio` object needs to survive re-renders and keep playing; storing it
-   in state would trigger needless re-renders and could recreate the element.
-   A ref gives one stable instance that effects and event handlers can control
-   directly.
+   I only want one `Audio` object for the whole app, and a ref keeps the same one
+   across re-renders. If it was state, every update would re-render the page and
+   I could end up starting the song again by accident. With the ref I can call
+   `play()` or `pause()` from anywhere and the music keeps going when I change
+   tabs.
 2. **Why do all API calls live in `services/` instead of inside components?**
-   Keeping URLs, `fetch` calls, and error handling in one place means components
-   stay focused on UI, the same logic can be reused by several pages, and a
-   changed endpoint only has to be updated once.
+   Putting the URLs and the `fetch` calls in one file means the components only
+   have to deal with the screen. Both Discover and the album page need album
+   data, so they can call the same function instead of copying it. When I had to
+   change an endpoint, it was one edit instead of three.
 3. **Why can the Gemini key not be placed in React code? What could happen if
-   you pushed it to GitHub?** Everything in the React bundle is downloaded to
-   the browser, so anyone could read the key in DevTools. A key pushed to GitHub
-   can be scraped by bots, abused to run up quota or billing, and would have to
-   be revoked and replaced. The serverless function keeps it server-side.
+   you pushed it to GitHub?** Everything in the React code is downloaded by the
+   browser, so anybody could open DevTools and read the key. On GitHub, bots find
+   keys like that pretty quickly and can use up the quota or run up a bill, so it
+   would have to be deleted and replaced. Reading it from `process.env` inside the
+   serverless function keeps it on the server.
 4. **Why is this recommender an LLM prompt and not a trained machine learning
-   model? Give one strength and one weakness.** The app sends a taste profile to
-   a pre-trained model and asks it to reason in context; no model is trained on
-   our data. Strength: no dataset, training pipeline, or ML infrastructure is
-   needed, and the prompt can be changed quickly. Weakness: output is
-   probabilistic and can hallucinate albums or reasons, so every suggestion must
-   be verified, and it depends on an external API's limits and availability.
-5. **Describe the hardest bug you hit and how you fixed it.**
-   The hardest bug was Recommendations returning a 500 error on the live site
-   while it worked locally. The Vercel variable was saved as `GEMIN_API_KEY`,
-   with one `I` missing, so `process.env.GEMINI_API_KEY` was always empty even
-   though I was sure the key was set. Renaming the variable and redeploying fixed
-   it. Along the way I also had to send a browser-like `User-Agent` from the
-   Deezer function, because Deezer blocked the default serverless request.
+   model? Give one strength and one weakness.** I did not train anything. The app
+   sends a summary of my saved albums and ratings to Gemini and asks it to suggest
+   albums from that, so it is just a prompt against an existing model. The good
+   part is that I did not need a dataset or training time, and I could change the
+   prompt when the picks were bad. The bad part is that it can make up albums or
+   give weird reasons, which is why every pick is searched on iTunes before it is
+   shown.
+5. **Describe the hardest bug you hit and how you fixed it.** My hardest bug was
+   Recommendations returning a 500 on Vercel even though it worked locally. The
+   environment variable in Vercel was named `GEMIN_API_KEY` with one `I` missing,
+   so `process.env.GEMINI_API_KEY` was empty and I kept thinking the key was not
+   saved. Renaming the variable and redeploying fixed it. I also had to send a
+   browser User-Agent from the Deezer function, because Deezer blocked the
+   default serverless request.
 
 ## Submission checklist
 
-- [x] GitHub repository link: https://github.com/darrelle01/album-tracker
-- [x] Live Vercel site link: https://album-tracker-six.vercel.app
-- [x] Screenshot: search results (`docs/search.png`)
-- [x] Screenshot: album page (`docs/album.png`)
-- [x] Screenshot: recommendations (`docs/recommendations.png`)
+- [x] GitHub repository: https://github.com/darrelle01/album-tracker
+- [x] Live Vercel site: https://album-tracker-six.vercel.app
+- [x] Screenshot of the search results: `docs/search.png`
+- [x] Screenshot of an album page: `docs/album.png`
+- [x] Screenshot of the recommendations: `docs/recommendations.png`
 - [x] No API key anywhere in the repository (`.env.local` is gitignored)
-- [x] `GEMINI_API_KEY` added in Vercel → Settings → Environment Variables
+- [x] `GEMINI_API_KEY` added in Vercel under Settings, Environment Variables
 - [ ] Reflection answers rewritten in your own words
 
 ## Suggested grading rubric
