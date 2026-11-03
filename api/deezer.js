@@ -19,8 +19,6 @@ export default async function handler(req, res) {
       console.error("Deezer error:", r.status, detail);
       return res.status(502).json({
         error: "Deezer is unavailable.",
-        upstreamStatus: r.status,
-        detail: detail.slice(0, 200),
       });
     }
 
