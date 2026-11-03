@@ -12,7 +12,7 @@ in your collection.
 ![Search results screenshot](docs/search.png)
 
 **Live site:** <!-- TODO: https://album-tracker-yourname.vercel.app -->
-**GitHub repository:** <!-- TODO: https://github.com/YOUR-USERNAME/album-tracker -->
+**GitHub repository:** https://github.com/darrelle01/album-tracker
 
 ## Features
 
@@ -42,7 +42,7 @@ Google Gemini API, and Vercel serverless functions.
 ## Run it locally
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/album-tracker.git
+git clone https://github.com/darrelle01/album-tracker.git
 cd album-tracker
 npm install
 ```
@@ -143,7 +143,7 @@ Google. Music data, artwork, and audio belong to their respective owners.
 
 ## Submission checklist
 
-- [ ] GitHub repository link: <!-- TODO -->
+- [x] GitHub repository link: https://github.com/darrelle01/album-tracker
 - [ ] Live Vercel site link: <!-- TODO -->
 - [ ] Screenshot: search results (`docs/search.png`)
 - [ ] Screenshot: album page (`docs/album.png`)
