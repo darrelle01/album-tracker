@@ -55,6 +55,7 @@ export default async function handler(req, res) {
                   "You are a music recommendation engine. You receive a person's saved albums with a star rating (0 means unrated) and a status (wishlist, listening, listened). " +
                   "Infer their taste from patterns such as genres, eras, moods, and artists. Weight 4-5 star albums most, and steer away from the style of 1-2 star albums. " +
                   "Recommend exactly 6 real, released albums that are NOT in their list. At most 2 may be by artists already in the list. " +
+                  "Never recommend tribute, cover, karaoke, or greatest-hits albums, and ignore reissues or deluxe editions when a studio album exists. " +
                   'Reply only with JSON: {"albums": [{"title":"","artist":"","reason":""}]}. ' +
                   "Each reason is under 15 words and mentions the pattern it matches. Never include song lyrics.",
               },
