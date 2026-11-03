@@ -119,28 +119,3 @@ Google, and the music, artwork and audio belong to their owners.
    saved. Renaming the variable and redeploying fixed it. I also had to send a
    browser User-Agent from the Deezer function, because Deezer blocked the
    default serverless request.
-
-## Submission checklist
-
-- [x] GitHub repository: https://github.com/darrelle01/album-tracker
-- [x] Live Vercel site: https://album-tracker-six.vercel.app
-- [x] Screenshot of the search results: `docs/search.png`
-- [x] Screenshot of an album page: `docs/album.png`
-- [x] Screenshot of the recommendations: `docs/recommendations.png`
-- [x] No API key anywhere in the repository (`.env.local` is gitignored)
-- [x] `GEMINI_API_KEY` added in Vercel under Settings, Environment Variables
-- [ ] Reflection answers rewritten in your own words
-
-## Suggested grading rubric
-
-| Criteria | Points |
-| --- | --- |
-| Core app: search, album page, previews, mini player (Steps 1–10) | 25 |
-| Collection: save, status, rating, notes, filter, sort, persistence | 20 |
-| Code organization and readability | 10 |
-| Deezer full-album option (Step 11) | 10 |
-| AI recommendations (Step 12) | 15 |
-| Deployment and environment variables (Step 13) | 10 |
-| README quality | 5 |
-| Reflection answers | 5 |
-| **Total** | **100** |
