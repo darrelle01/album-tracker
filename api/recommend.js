@@ -2,7 +2,8 @@ export default async function handler(req, res) {
   if (req.method !== "POST")
     return res.status(405).json({ error: "Use POST." });
 
-  const key = process.env.GEMINI_API_KEY;
+  // Trim whitespace/newlines that can sneak in when pasting into a host's UI.
+  const key = process.env.GEMINI_API_KEY?.trim();
   if (!key) {
     return res.status(500).json({
       error: "GEMINI_API_KEY is missing. Check .env.local and restart.",
@@ -27,7 +28,9 @@ export default async function handler(req, res) {
   }
 
   // Model names change; override with GEMINI_MODEL if this one is retired.
-  const MODEL = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
+  const MODEL = (
+    process.env.GEMINI_MODEL || "gemini-3.5-flash-lite"
+  ).trim();
 
   try {
     const r = await fetch(

@@ -11,7 +11,7 @@ in your collection.
 
 ![Search results screenshot](docs/search.png)
 
-**Live site:** <!-- TODO: https://album-tracker-yourname.vercel.app -->
+**Live site:** https://album-tracker-six.vercel.app
 **GitHub repository:** https://github.com/darrelle01/album-tracker
 
 ## Features
@@ -144,7 +144,7 @@ Google. Music data, artwork, and audio belong to their respective owners.
 ## Submission checklist
 
 - [x] GitHub repository link: https://github.com/darrelle01/album-tracker
-- [ ] Live Vercel site link: <!-- TODO -->
+- [x] Live Vercel site link: https://album-tracker-six.vercel.app
 - [ ] Screenshot: search results (`docs/search.png`)
 - [ ] Screenshot: album page (`docs/album.png`)
 - [ ] Screenshot: recommendations (`docs/recommendations.png`)
