@@ -78,13 +78,11 @@ npm run lint    # ESLint
 
 ## Screenshots
 
-| Search | Album page |
-| --- | --- |
-| ![Search](docs/search.png) | ![Album](docs/album.png) |
+| Search | Album page | Recommendations |
+| --- | --- | --- |
+| ![Search](docs/search.png) | ![Album](docs/album.png) | ![Recommendations](docs/recommendations.png) |
 
-> Add `docs/recommendations.png` after you save three rated albums and generate
-> picks with your Gemini key, then link it here. You can also replace the two
-> screenshots above with your own.
+> Replace these with your own screenshots if you prefer.
 
 ## Limitations
 
@@ -135,21 +133,23 @@ Google. Music data, artwork, and audio belong to their respective owners.
    probabilistic and can hallucinate albums or reasons, so every suggestion must
    be verified, and it depends on an external API's limits and availability.
 5. **Describe the hardest bug you hit and how you fixed it.**
-   <!-- TODO: replace with your own bug and fix, e.g. a local /api 404 caused by
-   not restarting Vite after editing vite.config.js. -->
-   The local `/api/deezer` endpoint returned 404 even though the file existed.
-   The cause was that Vite only reads `vite.config.js` at startup, so the new
-   middleware was not active. Restarting `npm run dev` fixed it.
+   The hardest bug was on the deployed site: Recommendations returned a 500
+   error even though it worked locally. The Vercel environment variable held the
+   API key three times on separate lines, so the Gemini request failed with an
+   invalid header value. I fixed it by extracting only the first non-empty line
+   in the serverless function and by replacing the Vercel value with a single
+   line. I also added a browser-like `User-Agent` to the Deezer function because
+   Deezer rejected the default serverless request.
 
 ## Submission checklist
 
 - [x] GitHub repository link: https://github.com/darrelle01/album-tracker
 - [x] Live Vercel site link: https://album-tracker-six.vercel.app
-- [ ] Screenshot: search results (`docs/search.png`)
-- [ ] Screenshot: album page (`docs/album.png`)
-- [ ] Screenshot: recommendations (`docs/recommendations.png`)
-- [ ] No API key anywhere in the repository (`.env.local` is gitignored)
-- [ ] `GEMINI_API_KEY` added in Vercel → Settings → Environment Variables
+- [x] Screenshot: search results (`docs/search.png`)
+- [x] Screenshot: album page (`docs/album.png`)
+- [x] Screenshot: recommendations (`docs/recommendations.png`)
+- [x] No API key anywhere in the repository (`.env.local` is gitignored)
+- [x] `GEMINI_API_KEY` added in Vercel → Settings → Environment Variables
 - [ ] Reflection answers rewritten in your own words
 
 ## Suggested grading rubric
