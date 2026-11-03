@@ -36,8 +36,8 @@ in your collection.
 
 ## Tech stack
 
-React 19, Vite, Context API, `localStorage`, iTunes Search API, Deezer API,
-Google Gemini API, and Vercel serverless functions.
+React, Vite, Context API, iTunes Search API, Deezer API, Google Gemini API, and
+Vercel serverless functions.
 
 ## Run it locally
 
