@@ -37,8 +37,9 @@ export default async function handler(req, res) {
     process.env.GEMINI_MODEL || "gemini-3.5-flash-lite"
   ).trim();
 
-  try {
-    const r = await fetch(
+  // Gemini occasionally answers 503 when a model is busy; one retry is enough.
+  const askGemini = async () =>
+    fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
       {
         method: "POST",
@@ -64,6 +65,13 @@ export default async function handler(req, res) {
         }),
       },
     );
+
+  try {
+    let r = await askGemini();
+    if (r.status === 503 || r.status === 429) {
+      await new Promise((resolve) => setTimeout(resolve, 1200));
+      r = await askGemini();
+    }
 
     if (!r.ok) {
       const detail = await r.text();
