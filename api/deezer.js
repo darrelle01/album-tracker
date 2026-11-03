@@ -15,10 +15,12 @@ export default async function handler(req, res) {
       },
     );
     if (!r.ok) {
-      console.error("Deezer error:", r.status, await r.text());
+      const detail = await r.text();
+      console.error("Deezer error:", r.status, detail);
       return res.status(502).json({
         error: "Deezer is unavailable.",
         upstreamStatus: r.status,
+        detail: detail.slice(0, 200),
       });
     }
 

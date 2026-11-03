@@ -65,6 +65,7 @@ export default async function handler(req, res) {
       console.error("Gemini error:", r.status, detail);
       return res.status(502).json({
         error: `Gemini returned ${r.status}. Check the terminal for details.`,
+        detail: detail.slice(0, 300),
       });
     }
 
@@ -76,6 +77,7 @@ export default async function handler(req, res) {
     console.error("Function error:", err);
     return res.status(500).json({
       error: "Something went wrong. Check the terminal for details.",
+      detail: String(err?.message ?? err).slice(0, 300),
     });
   }
 }
