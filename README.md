@@ -84,38 +84,3 @@ serverless function, so it never ends up in the React code.
 
 This is a class project. It is not affiliated with Apple, Spotify, Deezer or
 Google, and the music, artwork and audio belong to their owners.
-
-## Reflection answers
-
-1. **Why is the audio element stored in a `useRef` instead of `useState`?**
-   I only want one `Audio` object for the whole app, and a ref keeps the same one
-   across re-renders. If it was state, every update would re-render the page and
-   I could end up starting the song again by accident. With the ref I can call
-   `play()` or `pause()` from anywhere and the music keeps going when I change
-   tabs.
-2. **Why do all API calls live in `services/` instead of inside components?**
-   Putting the URLs and the `fetch` calls in one file means the components only
-   have to deal with the screen. Both Discover and the album page need album
-   data, so they can call the same function instead of copying it. When I had to
-   change an endpoint, it was one edit instead of three.
-3. **Why can the Gemini key not be placed in React code? What could happen if
-   you pushed it to GitHub?** Everything in the React code is downloaded by the
-   browser, so anybody could open DevTools and read the key. On GitHub, bots find
-   keys like that pretty quickly and can use up the quota or run up a bill, so it
-   would have to be deleted and replaced. Reading it from `process.env` inside the
-   serverless function keeps it on the server.
-4. **Why is this recommender an LLM prompt and not a trained machine learning
-   model? Give one strength and one weakness.** I did not train anything. The app
-   sends a summary of my saved albums and ratings to Gemini and asks it to suggest
-   albums from that, so it is just a prompt against an existing model. The good
-   part is that I did not need a dataset or training time, and I could change the
-   prompt when the picks were bad. The bad part is that it can make up albums or
-   give weird reasons, which is why every pick is searched on iTunes before it is
-   shown.
-5. **Describe the hardest bug you hit and how you fixed it.** My hardest bug was
-   Recommendations returning a 500 on Vercel even though it worked locally. The
-   environment variable in Vercel was named `GEMIN_API_KEY` with one `I` missing,
-   so `process.env.GEMINI_API_KEY` was empty and I kept thinking the key was not
-   saved. Renaming the variable and redeploying fixed it. I also had to send a
-   browser User-Agent from the Deezer function, because Deezer blocked the
-   default serverless request.
